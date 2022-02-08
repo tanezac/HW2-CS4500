@@ -45,20 +45,11 @@ public class Main{
         // Bold
         public static final String BLACK_BOLD = "\033[1;30m";  // BLACK
         public static final String RED_BOLD = "\033[1;31m";    // RED
+        public static final String WHITE_BOLD = "\033[1;37m";  // WHITE
 
-        // Underline
-        public static final String BLACK_UNDERLINED = "\033[4;30m";  // BLACK
-        public static final String RED_UNDERLINED = "\033[4;31m";    // RED
-
-        // Background
-        public static final String BLACK_BACKGROUND = "\033[40m";  // BLACK
-        public static final String RED_BACKGROUND = "\033[41m";    // RED
-      
-        // High Intensity backgrounds
-        public static final String BLACK_BACKGROUND_BRIGHT = "\033[0;100m";// BLACK
-        public static final String RED_BACKGROUND_BRIGHT = "\033[0;101m";// RED
     }
     
+    /***************************************************************************/
     private int rank;
     private int suit;
     private int icon;
@@ -79,24 +70,103 @@ public class Main{
     
     public static void displayCard(Main card){
         if(card.cardColor() == 0 | card.cardColor() == 3 ){
-        System.out.println(ConsoleColors.BLACK_BACKGROUND_BRIGHT + card);
+        System.out.println(ConsoleColors.BLACK_BOLD + card + ConsoleColors.BLACK_BOLD);
         }   
     else{
-        System.out.println(ConsoleColors.RED_BACKGROUND_BRIGHT + card);
+        System.out.println(ConsoleColors.RED_BOLD + card + ConsoleColors.RED_BOLD);
         } 
     }
+    /***************************************************************************/
+    
+    public static final int SIZE = 21;
+    public static final int SIZE_PILES = 7;
+    
+    public static void EnterKey(){
+        System.out.println(ConsoleColors.WHITE_BOLD + "Press \"ENTER\" to continue...");
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
+    }
+    
+    public static void display_piles(Main card[]){
+        for (int i = 0; i < card.length; i++){
+            displayCard(card[i]);
+        }
+    }
+    
     
     // Main method
     public static void main(String[] args) {
-    
-    System.out.println("Wellcome to the Game.");
-   
-    Main card = new Main(9, 3);
-    Main card1 = new Main(10, 1);
-    
-    displayCard(card);
-    displayCard(card1);
+        final int SIZE = 21;
+        System.out.println("Wellcome to the Game - Magic Card");
+        System.out.println("You will randomly choose 1 card from 21 cards, then the computer will use magic to guess the card you have chosen.");
+        System.out.println("Remember, keep your chosen card in mind and don't tell the computer about it.\n");
+        EnterKey();
+        
+        
+        System.out.println("Please choose 1 card at random and keep it in mind."); 
+        System.out.println("21 Playing Crad: \n");
+        
+        int min_ranks = 1;
+        int max_ranks = 13;
+        int random_ranks;
+        
+        int min_suits = 0;
+        int max_suits = 3;
+        int random_suits;
+        Main arrayCard[] = new Main[SIZE];
+        
+        for(int i =0; i < SIZE; i++){
+            random_ranks = (int)Math.floor(Math.random() * (max_ranks - min_ranks + 1) + min_ranks);
+            random_suits = (int)Math.floor(Math.random() * (max_suits - min_suits + 1) + min_suits);
+            arrayCard[i] = new Main(random_ranks, random_suits);
+            
+        }
+        
+        for(int i = 0; i < SIZE; i++ ){
+            displayCard(arrayCard[i]);
+        }
+        
+        System.out.println(" ");
+        EnterKey();
+        System.out.println("The computer will deal 21 cards into 3 different piles, each  piles will have 7 cards.\n");
+        
+        Main piles_1[] = new Main[SIZE_PILES];
+        Main piles_2[] = new Main[SIZE_PILES];
+        Main piles_3[] = new Main[SIZE_PILES];
+        
+        piles_1 = Arrays.copyOfRange(arrayCard, 0, 6);
+        piles_2 = Arrays.copyOfRange(arrayCard, 7, 13);
+        piles_3 = Arrays.copyOfRange(arrayCard, 14, 20);
+        
+        System.out.println(ConsoleColors.WHITE_BOLD + "Piles 1: ");
+        display_piles(piles_1);
+        
+        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 2: ");
+        display_piles(piles_2);
+        
+        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 3: ");
+        display_piles(piles_3);
+        
     
 }
 }
    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
