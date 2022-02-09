@@ -79,7 +79,9 @@ public class Main{
     /***************************************************************************/
     
     public static final int SIZE = 21;
-    public static final int SIZE_PILES = 7;
+    public static final int SIZE_PILES = 21;
+    public static boolean check = false;
+    public static int user_choice;
     
     public static void EnterKey(){
         System.out.println(ConsoleColors.WHITE_BOLD + "Press \"ENTER\" to continue...");
@@ -93,6 +95,68 @@ public class Main{
         }
     }
     
+    public static int check_user(int user_choice, Scanner input){
+        while(!check){
+            if(input.hasNextInt()){
+                user_choice = input.nextInt();
+                if(user_choice < 1 || user_choice > 3){
+                System.out.print("\nYou must enter an integer - X from 1 to 3.");
+                System.out.println("Please try again!");
+                System.out.print("Enter the number of piles from 1 to 3: ");
+                input = new Scanner(System.in);
+                check = false;
+            }
+            else{
+                check = true;
+                }
+            }
+            else{
+                System.out.println("\nThe number is not an integer");
+                System.out.print("You must Enter an integer.");
+                System.out.println("Please try again!");
+                System.out.print("Enter the number of piles from 1 to 3:  ");
+                input = new Scanner(System.in);
+                check = false;
+            }
+        }
+        return user_choice;
+    }
+    
+    public static void split_card(Main piles_1[], Main piles_2[], Main piles_3[], Main arrayCard[]){
+        piles_1 = Arrays.copyOfRange(arrayCard, 0, 6);
+        piles_2 = Arrays.copyOfRange(arrayCard, 7, 13);
+        piles_3 = Arrays.copyOfRange(arrayCard, 14, 20);
+        
+        System.out.println(ConsoleColors.WHITE_BOLD + "Piles 1: ");
+        display_piles(piles_1);
+        
+        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 2: ");
+        display_piles(piles_2);
+        
+        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 3: ");
+        display_piles(piles_3);
+    }
+    
+    public static Main[] append_array(Main array1[], Main array2[]) {
+        Main array[] = new Main[array1.length + array2.length];
+        for(int i = 0; i < array1.length; i++){
+            array[i] = array1[i];        
+        }
+        
+        for(int i = array1.length; i < (array1.length + array2.length); i++){
+            array[i] = array2[i];        
+        }
+        return array;
+    }
+    
+    public static Main[] append_card(Main piles_1[], Main piles_2[], Main piles_3[], int user_choice){
+        Main array1[] = new Main[14];
+        Main new_arrayCard[] = new Main[SIZE];
+        array1 = append_array(piles_1, piles_2);
+        new_arrayCard = append_array(array1, piles_3);
+        return new_arrayCard;
+        
+    }
     
     // Main method
     public static void main(String[] args) {
@@ -134,23 +198,36 @@ public class Main{
         Main piles_2[] = new Main[SIZE_PILES];
         Main piles_3[] = new Main[SIZE_PILES];
         
-        piles_1 = Arrays.copyOfRange(arrayCard, 0, 6);
-        piles_2 = Arrays.copyOfRange(arrayCard, 7, 13);
-        piles_3 = Arrays.copyOfRange(arrayCard, 14, 20);
+        split_card(piles_1, piles_2, piles_3, arrayCard);
         
-        System.out.println(ConsoleColors.WHITE_BOLD + "Piles 1: ");
-        display_piles(piles_1);
+        //User coice the pilers have his/her card
+        Scanner input = new Scanner(System.in); 
+        System.out.print(ConsoleColors.WHITE_BOLD + "\nPlease enter the number of piles you see your cards in: ");
+         
+        user_choice = check_user(user_choice, input);
+        System.out.print("user_choice: " + user_choice);
+        Main new_arrayCard[] = new Main[SIZE];
+        new_arrayCard = append_card(piles_1, piles_2, piles_3, user_choice);
+        display_piles(new_arrayCard);
         
-        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 2: ");
-        display_piles(piles_2);
         
-        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 3: ");
-        display_piles(piles_3);
+        
+        
+        
+        
+        
+    
+
+    
+       
         
     
 }
 }
    
+
+
+
 
 
 
