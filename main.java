@@ -24,10 +24,11 @@ King	↦	13
 
 Outside Sources:
 
-Compiler. Compiler | Formal Languages and Compilers. (n.d.). Retrieved February 6, 2022, from https://brasil.cel.agh.edu.pl/~11sustrojny/en/compiler/index.html 
-Deck of cards java. Stack Overflow. (1961, March 1). Retrieved February 6, 2022, from https://stackoverflow.com/questions/15942050/deck-of-cards-java/25092220 
-Bernhard, A. (2021, June 21). The lost origins of playing-card symbols. The Atlantic. 
+- Compiler. Compiler | Formal Languages and Compilers. (n.d.). Retrieved February 6, 2022, from https://brasil.cel.agh.edu.pl/~11sustrojny/en/compiler/index.html 
+- Deck of cards java. Stack Overflow. (1961, March 1). Retrieved February 6, 2022, from https://stackoverflow.com/questions/15942050/deck-of-cards-java/25092220 
+- Bernhard, A. (2021, June 21). The lost origins of playing-card symbols. The Atlantic. 
     Retrieved February 6, 2022, from https://www.theatlantic.com/technology/archive/2017/08/the-lost-origins-of-playing-card-symbols/537786/ 
+- Java program to merge two arrays. GeeksforGeeks. (2020, October 15). Retrieved February 10, 2022, from https://www.geeksforgeeks.org/java-program-to-merge-two-arrays/ 
 
 
 *******************************************************************************/
@@ -68,20 +69,24 @@ public class Main{
         return this.suit;
     }
     
+    //display single card
     public static void displayCard(Main card){
         if(card.cardColor() == 0 | card.cardColor() == 3 ){
-        System.out.println(ConsoleColors.BLACK_BOLD + card + ConsoleColors.BLACK_BOLD);
+            System.out.println(ConsoleColors.BLACK_BOLD + card + ConsoleColors.BLACK_BOLD);
         }   
-    else{
-        System.out.println(ConsoleColors.RED_BOLD + card + ConsoleColors.RED_BOLD);
+        else{
+            System.out.println(ConsoleColors.RED_BOLD + card + ConsoleColors.RED_BOLD);
         } 
     }
     /***************************************************************************/
     
     public static final int SIZE = 21;
-    public static final int SIZE_PILES = 21;
+    public static final int SIZE_PILES = 7;
     public static boolean check = false;
     public static int user_choice;
+    public static int user_choice1;
+    public static int user_choice2;
+    
     
     public static void EnterKey(){
         System.out.println(ConsoleColors.WHITE_BOLD + "Press \"ENTER\" to continue...");
@@ -89,6 +94,7 @@ public class Main{
         scanner.nextLine();
     }
     
+    // display piles
     public static void display_piles(Main card[]){
         for (int i = 0; i < card.length; i++){
             displayCard(card[i]);
@@ -122,50 +128,56 @@ public class Main{
         return user_choice;
     }
     
-    public static void split_card(Main piles_1[], Main piles_2[], Main piles_3[], Main arrayCard[]){
-        piles_1 = Arrays.copyOfRange(arrayCard, 0, 6);
-        piles_2 = Arrays.copyOfRange(arrayCard, 7, 13);
-        piles_3 = Arrays.copyOfRange(arrayCard, 14, 20);
+    
+    public static Main[] append(Main[] a, Main[] b){
+        int a1 = a.length;
+        int b1 = b.length;
+        int c1 = a1 + b1;
+        Main[] c = new Main[c1];
         
-        System.out.println(ConsoleColors.WHITE_BOLD + "Piles 1: ");
-        display_piles(piles_1);
-        
-        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 2: ");
-        display_piles(piles_2);
-        
-        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 3: ");
-        display_piles(piles_3);
+        for (int i = 0; i < a1; i = i + 1) {
+            c[i] = a[i];
+        }
+ 
+        for (int i = 0; i < b1; i = i + 1) {
+            c[a1 + i] = b[i];
+        }
+        return c;
     }
     
-    public static Main[] append_array(Main array1[], Main array2[]) {
-        Main array[] = new Main[array1.length + array2.length];
-        for(int i = 0; i < array1.length; i++){
-            array[i] = array1[i];        
-        }
-        
-        for(int i = array1.length; i < (array1.length + array2.length); i++){
-            array[i] = array2[i];        
-        }
-        return array;
-    }
     
-    public static Main[] append_card(Main piles_1[], Main piles_2[], Main piles_3[], int user_choice){
-        Main array1[] = new Main[14];
-        Main new_arrayCard[] = new Main[SIZE];
-        array1 = append_array(piles_1, piles_2);
-        new_arrayCard = append_array(array1, piles_3);
+    public static Main[] append_card(Main[] piles_1, Main[] piles_2, Main[] piles_3, int user_choice){
+        Main[] array1 = new Main[piles_1.length + piles_2.length];
+        Main[] new_arrayCard = new Main[piles_1.length + piles_2.length + piles_3.length];
+        
+        if(user_choice == 1){
+            array1 = append(piles_2, piles_1);
+            new_arrayCard = append(array1, piles_3);
+        }
+        else if (user_choice == 2){
+            array1 = append(piles_1, piles_2);
+            new_arrayCard = append(array1, piles_3);
+        }
+        else{
+            array1 = append(piles_1, piles_3);
+            new_arrayCard = append(array1, piles_2);
+        }
         return new_arrayCard;
         
     }
+        
     
     // Main method
     public static void main(String[] args) {
+        
         final int SIZE = 21;
+        char again;
+        do{
+        Scanner input = new Scanner(System.in);
         System.out.println("Wellcome to the Game - Magic Card");
         System.out.println("You will randomly choose 1 card from 21 cards, then the computer will use magic to guess the card you have chosen.");
         System.out.println("Remember, keep your chosen card in mind and don't tell the computer about it.\n");
         EnterKey();
-        
         
         System.out.println("Please choose 1 card at random and keep it in mind."); 
         System.out.println("21 Playing Crad: \n");
@@ -177,13 +189,22 @@ public class Main{
         int min_suits = 0;
         int max_suits = 3;
         int random_suits;
-        Main arrayCard[] = new Main[SIZE];
+        
+        boolean check_random = false;
+        
+        Main[] arrayCard = new Main[SIZE];
+        Main[] piles_1 = new Main[SIZE_PILES];
+        Main[] piles_2 = new Main[SIZE_PILES];
+        Main[] piles_3 = new Main[SIZE_PILES];
+        Main[] new_arrayCard = new Main[SIZE];
+        Main[] new_arrayCard1 = new Main[SIZE];
+        Main[] new_arrayCard2 = new Main[SIZE];
+        int[] rank = new int[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 5, 9, 10, 3, 2, 11, 7, 9 };
+        int[] suits = new int[]{ 0, 1, 2, 3, 3, 2, 3, 1, 0, 1, 1, 2, 3, 2, 1, 2, 3, 2, 3, 2, 1 };
+       
         
         for(int i =0; i < SIZE; i++){
-            random_ranks = (int)Math.floor(Math.random() * (max_ranks - min_ranks + 1) + min_ranks);
-            random_suits = (int)Math.floor(Math.random() * (max_suits - min_suits + 1) + min_suits);
-            arrayCard[i] = new Main(random_ranks, random_suits);
-            
+            arrayCard[i] = new Main(rank[i], suits[i]);
         }
         
         for(int i = 0; i < SIZE; i++ ){
@@ -192,39 +213,129 @@ public class Main{
         
         System.out.println(" ");
         EnterKey();
-        System.out.println("The computer will deal 21 cards into 3 different piles, each  piles will have 7 cards.\n");
+        /*******************************************************************************************************************/
+        //First Round
+        System.out.println("The computer will deal 21 cards into 3 different piles, each  piles will have 7 cards.");
+        System.out.print(ConsoleColors.WHITE_BOLD + "Find your card in these 3 piles.\n");
         
-        Main piles_1[] = new Main[SIZE_PILES];
-        Main piles_2[] = new Main[SIZE_PILES];
-        Main piles_3[] = new Main[SIZE_PILES];
+        int count = 0;
+        int count1 = 0;
+        int count2 =0;
+        for(int i = 0; i < SIZE ; i = i + 3){
+            piles_1[count] = arrayCard[i];
+            count++;
+        }
+        for(int i = 1; i < SIZE ; i = i + 3){
+            piles_2[count1] = arrayCard[i];
+            count1++;
+        }
+        for(int i = 2; i < SIZE ; i = i + 3){
+            piles_3[count2] = arrayCard[i];
+            count2++;
+        }
         
-        split_card(piles_1, piles_2, piles_3, arrayCard);
+        System.out.println(ConsoleColors.WHITE_BOLD + "Piles 1: ");
+        display_piles(piles_1);
         
-        //User coice the pilers have his/her card
-        Scanner input = new Scanner(System.in); 
+        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 2: ");
+        display_piles(piles_2);
+        
+        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 3: ");
+        display_piles(piles_3);
+        
+        //User choice the pilers have his/her card
         System.out.print(ConsoleColors.WHITE_BOLD + "\nPlease enter the number of piles you see your cards in: ");
-         
         user_choice = check_user(user_choice, input);
-        System.out.print("user_choice: " + user_choice);
-        Main new_arrayCard[] = new Main[SIZE];
-        new_arrayCard = append_card(piles_1, piles_2, piles_3, user_choice);
-        display_piles(new_arrayCard);
-        
-        
-        
-        
-        
-        
-        
+        System.out.println("you choose pile "+ user_choice);
+        new_arrayCard = append_card(piles_1, piles_2, piles_3, user_choice); //New order of cards after user selects piles
+        System.out.println(" ");
+        EnterKey();
     
-
-    
-       
+        /************************************************************************************************************/
+        //Second role
+        check = false;
+        System.out.println("The computer will deal 21 cards into 3 different piles, each  piles will have 7 cards.");
+        System.out.println(ConsoleColors.WHITE_BOLD + "Find your card in these 3 piles.");
+        count = count1 = count2 =0;
+        for(int i = 0; i < SIZE ; i = i + 3){
+            piles_1[count] = new_arrayCard[i];
+            count++;
+        }
+        for(int i = 1; i < SIZE ; i = i + 3){
+            piles_2[count1] = new_arrayCard[i];
+            count1++;
+        }
+        for(int i = 2; i < SIZE ; i = i + 3){
+            piles_3[count2] = new_arrayCard[i];
+            count2++;
+        }
         
-    
-}
+        System.out.println(ConsoleColors.WHITE_BOLD + "Piles 1: ");
+        display_piles(piles_1);
+        
+        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 2: ");
+        display_piles(piles_2);
+        
+        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 3: ");
+        display_piles(piles_3);
+        
+        System.out.print(ConsoleColors.WHITE_BOLD + "\nPlease enter the number of piles you see your cards in: ");
+        user_choice = check_user(user_choice, input);
+        System.out.println("you choose pile "+ user_choice);
+        new_arrayCard1 = append_card(piles_1, piles_2, piles_3, user_choice);
+        System.out.println(" ");
+        EnterKey();
+        
+        /*************************************************************************************************************/
+        //Third round
+        check = false;
+        System.out.println("The computer will deal 21 cards into 3 different piles, each  piles will have 7 cards.");
+        System.out.println(ConsoleColors.WHITE_BOLD + "Find your card in these 3 piles.");
+        count = count1 = count2 =0;
+        for(int i = 0; i < SIZE ; i = i + 3){
+            piles_1[count] = new_arrayCard1[i];
+            count++;
+        }
+        for(int i = 1; i < SIZE ; i = i + 3){
+            piles_2[count1] = new_arrayCard1[i];
+            count1++;
+        }
+        for(int i = 2; i < SIZE ; i = i + 3){
+            piles_3[count2] = new_arrayCard1[i];
+            count2++;
+        }
+        
+        System.out.println(ConsoleColors.WHITE_BOLD + "Piles 1: ");
+        display_piles(piles_1);
+        
+        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 2: ");
+        display_piles(piles_2);
+        
+        System.out.println(ConsoleColors.WHITE_BOLD + "\nPiles 3: ");
+        display_piles(piles_3);
+        
+        System.out.print(ConsoleColors.WHITE_BOLD + "Please enter the number of piles you see your cards in: ");
+        user_choice = check_user(user_choice, input);
+        System.out.println("you choose pile "+ user_choice);
+        new_arrayCard2 = append_card(piles_1, piles_2, piles_3, user_choice);
+        System.out.println(" ");
+        EnterKey();
+        
+        
+        System.out.print(ConsoleColors.WHITE_BOLD + "\nYour card: ");
+        displayCard(new_arrayCard2[10]);
+        
+        
+        System.out.print(ConsoleColors.WHITE_BOLD + "Do you want to play again(Y/N): " );
+        again = input.next().charAt(0);
+        }while(again == 'y' || again == 'Y');
+        System.out.print(ConsoleColors.WHITE_BOLD + "Thanks for playing!" );
+    }
 }
    
+
+
+
 
 
 
